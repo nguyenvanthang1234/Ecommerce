@@ -36,13 +36,25 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
     navigate("/sign-in");
   };
 
+  // const handleLogout = async () => {
+  //   setLoading(true);
+  //   await UserService.logoutUser();
+  //   dispatch(resetUser());
+  //   setLoading(false);
+  // };
+
   const handleLogout = async () => {
     setLoading(true);
-    await UserService.logoutUser();
-    dispatch(resetUser());
-    setLoading(false);
+    try {
+      await UserService.logoutUser();
+      localStorage.removeItem("access_token");
+      dispatch(resetUser());
+    } catch (error) {
+      console.error("Logout failed", error);
+    } finally {
+      setLoading(false);
+    }
   };
-
   useEffect(() => {
     setLoading(true);
     setUserName(user?.name);
